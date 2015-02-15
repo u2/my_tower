@@ -1,0 +1,25 @@
+<%= form_for([@team, @membership]) do |f| %>
+  <% if @membership.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@membership.errors.count, "error") %> prohibited this membership from being saved:</h2>
+
+      <ul>
+      <% @membership.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :user_id %><br>
+    <%= f.select :user_id, User.pluck(:email, :id) %>
+  </div>
+  <div class="field">
+    <%= f.label :role %><br>
+    <%= f.select :role, Membership.roles.keys %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

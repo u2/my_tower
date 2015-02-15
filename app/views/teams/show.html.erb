@@ -7,7 +7,8 @@
 <% if @team.admin?(current_user) %>
 <%= link_to 'Edit', edit_team_path(@team) %> |
 <% end %>
-<%= link_to 'Back', teams_path %>
-<br>
+<%= link_to '切换团队', teams_path %>
+<br><br>
+<%= link_to '团队', team_memberships_url(@team) %>
 
 

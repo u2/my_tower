@@ -13,7 +13,7 @@ class Team < ActiveRecord::Base
   attr_accessor :user_id
 
   has_many :memberships, dependent: :destroy
-  has_many :user, through: :memberships
+  has_many :users, through: :memberships
 
   validates_presence_of :user_id
   after_create :create_admin_member
