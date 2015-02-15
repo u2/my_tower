@@ -31,12 +31,13 @@ group :development do
   gem 'annotate', '~> 2.6.5'
 end
 
-group :development, :test do
+group :test do
+  gem 'factory_girl'
+  gem 'factory_girl_rails'
   gem 'rspec-rails', '~> 3.0.1'
 end
 
 gem 'devise'
-gem 'cancancan'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
