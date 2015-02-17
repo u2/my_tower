@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   root 'welcome#index'
   resources :teams do
     resources :memberships
+    resources :projects, shallow: true do
+      resources :accesses
+    end
   end
 
   # Example of regular route:

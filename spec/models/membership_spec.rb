@@ -14,7 +14,7 @@ require 'rails_helper'
 
 RSpec.describe Membership, :type => :model do
 
-  it "delete only admin member" do
+  it "cannot delete only admin member" do
     user = create(:user)
     team = Team.create(user_id: user.id, name: 'tower')
     membership = Membership.last

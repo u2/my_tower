@@ -1,4 +1,6 @@
 class MembershipsController < TeamController
+
+  before_action :set_team
   before_action :set_membership, only: [:show, :edit, :update, :destroy]
 
   # GET /memberships

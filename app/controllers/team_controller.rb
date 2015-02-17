@@ -1,7 +1,5 @@
 class TeamController < ApplicationController
 
-  before_action :set_team
-
   helper_method :team_admin?
 
   private
