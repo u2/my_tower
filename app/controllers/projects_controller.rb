@@ -3,7 +3,6 @@ class ProjectsController < TeamController
   before_action :set_team, only: [:new]
   before_action :set_project, only: [:show, :edit, :update, :destroy]
 
-
   # GET /projects
   # GET /projects.json
   def index
@@ -13,6 +12,7 @@ class ProjectsController < TeamController
   # GET /projects/1
   # GET /projects/1.json
   def show
+    @accesses = @project.accesses
   end
 
   # GET /projects/new

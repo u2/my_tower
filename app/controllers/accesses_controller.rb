@@ -1,5 +1,6 @@
 class AccessesController < ApplicationController
   before_action :set_access, only: [:show, :edit, :update, :destroy]
+  before_action :set_project, only: [:new]
 
   # GET /accesses
   # GET /accesses.json
@@ -14,7 +15,7 @@ class AccessesController < ApplicationController
 
   # GET /accesses/new
   def new
-    @access = Access.new
+    @access = Access.new(project_id: params[:project_id])
   end
 
   # GET /accesses/1/edit
@@ -25,10 +26,10 @@ class AccessesController < ApplicationController
   # POST /accesses.json
   def create
     @access = Access.new(access_params)
-
+    @project = @access.project
     respond_to do |format|
       if @access.save
-        format.html { redirect_to @access, notice: 'Access was successfully created.' }
+        format.html { redirect_to project_path(@project), notice: 'Access was successfully created.' }
         format.json { render :show, status: :created, location: @access }
       else
         format.html { render :new }
@@ -42,7 +43,7 @@ class AccessesController < ApplicationController
   def update
     respond_to do |format|
       if @access.update(access_params)
-        format.html { redirect_to @access, notice: 'Access was successfully updated.' }
+        format.html { redirect_to project_path(@project), notice: 'Access was successfully updated.' }
         format.json { render :show, status: :ok, location: @access }
       else
         format.html { render :edit }
@@ -56,7 +57,7 @@ class AccessesController < ApplicationController
   def destroy
     @access.destroy
     respond_to do |format|
-      format.html { redirect_to accesses_url, notice: 'Access was successfully destroyed.' }
+      format.html { redirect_to project_path(@project), notice: 'Access was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -65,6 +66,11 @@ class AccessesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_access
       @access = Access.find(params[:id])
+      @project = @access.project
+    end
+
+    def set_project
+      @project = Project.find(params[:project_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

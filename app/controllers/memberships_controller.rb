@@ -27,7 +27,7 @@ class MembershipsController < TeamController
   # POST /memberships.json
   def create
     @membership = Membership.new(membership_params)
-
+    @team = @membership.team
     respond_to do |format|
       if @membership.save
         format.html { redirect_to team_membership_path(@team, @membership), notice: 'Membership was successfully created.' }

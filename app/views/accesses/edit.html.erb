@@ -1,6 +1,30 @@
 <h1>Editing access</h1>
 
-<%= render 'form' %>
+<%= form_for(@access) do |f| %>
+  <% if @access.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@access.errors.count, "error") %> prohibited this access from being saved:</h2>
+
+      <ul>
+      <% @access.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :user_id %><br>
+    <%= f.select :user_id, User.pluck(:email, :id) %>
+  </div>
+  <div class="field">
+    <%= f.label :role %><br>
+    <%= f.select :role, Access.roles.keys %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
 
 <%= link_to 'Show', @access %> |
-<%= link_to 'Back', accesses_path %>
+<%= link_to 'Back', project_path(@project) %>

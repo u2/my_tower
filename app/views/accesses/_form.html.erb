@@ -1,4 +1,4 @@
-<%= form_for(@access) do |f| %>
+<%= form_for([@project, @access]) do |f| %>
   <% if @access.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@access.errors.count, "error") %> prohibited this access from being saved:</h2>
@@ -13,19 +13,12 @@
 
   <div class="field">
     <%= f.label :user_id %><br>
-    <%= f.number_field :user_id %>
+    <%= f.select :user_id, User.pluck(:email, :id) %>
   </div>
-  <div class="field">
-    <%= f.label :project_id %><br>
-    <%= f.number_field :project_id %>
-  </div>
-  <div class="field">
-    <%= f.label :team_id %><br>
-    <%= f.number_field :team_id %>
-  </div>
+  <%= f.hidden_field :project_id %>
   <div class="field">
     <%= f.label :role %><br>
-    <%= f.number_field :role %>
+    <%= f.select :role, Access.roles.keys %>
   </div>
   <div class="actions">
     <%= f.submit %>
