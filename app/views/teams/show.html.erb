@@ -9,7 +9,7 @@
 <% end %>
 <%= link_to '切换团队', teams_path %>
 <br><br>
-<%= link_to '团队', team_memberships_url(@team) %>
+<%= link_to '团队', team_memberships_url(@team) if team_admin? %>
 
 <h1>Listing projects</h1>
 
@@ -28,8 +28,10 @@
         <td><%= project.name %></td>
         <td><%= project.team_id %></td>
         <td><%= link_to 'Show', project %></td>
+        <% if project.admin?(current_user) %>
         <td><%= link_to 'Edit', edit_project_path(project) %></td>
         <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

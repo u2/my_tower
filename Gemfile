@@ -37,7 +37,15 @@ group :test do
   gem 'rspec-rails', '~> 3.0.1'
 end
 
+group :development, :test do
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-rails'
+end
+
 gem 'devise'
+
+gem 'aasm'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

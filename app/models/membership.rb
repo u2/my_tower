@@ -20,12 +20,23 @@ class Membership < ActiveRecord::Base
   validates_presence_of :user_id
   validates_uniqueness_of :user_id, scope: :team_id
 
-  before_destroy :check_only_admin?
+  def admin?
+    self.role == "admin"
+  end
+
+  before_destroy :check_only_admin?, if: Proc.new{|membership| membership.admin? }
+  validate :must_has_admin?, on: :update
 
   private
 
+    def must_has_admin?
+      if self.role_change[0] == "admin"
+        errors.add(:role, '至少有一个管理员') unless check_only_admin?
+      end
+    end
+
     def check_only_admin?
-      Membership.where(team_id: self.team_id).where.not(user_id: self.id).where(role: Membership.roles[:admin]).exists?
+      Membership.where(team_id: self.team_id).where.not(user_id: self.user_id).where(role: Membership.roles[:admin]).exists?
     end
 
 end

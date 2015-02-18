@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'welcome#index'
   resources :teams, shallow: true do
-    resources :memberships
+    resources :memberships, shallow: true
     resources :projects, shallow: true do
       resources :accesses
     end

@@ -1,6 +1,8 @@
-class AccessesController < ApplicationController
+class AccessesController < TeamController
+  
   before_action :set_access, only: [:show, :edit, :update, :destroy]
-  before_action :set_project, only: [:new]
+  before_action :set_project, only: [:new, :index, :create]
+  before_action :set_team, :team_authenticate!
 
   # GET /accesses
   # GET /accesses.json
@@ -67,6 +69,7 @@ class AccessesController < ApplicationController
     def set_access
       @access = Access.find(params[:id])
       @project = @access.project
+      @team = @project.team
     end
 
     def set_project

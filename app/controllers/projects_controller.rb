@@ -1,7 +1,7 @@
 class ProjectsController < TeamController
-
-  before_action :set_team, only: [:new]
   before_action :set_project, only: [:show, :edit, :update, :destroy]
+  before_action :set_team, only: [:new, :index, :create]
+  before_action :team_authenticate!
 
   # GET /projects
   # GET /projects.json

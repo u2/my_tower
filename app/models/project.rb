@@ -14,7 +14,8 @@ class Project < ActiveRecord::Base
   attr_accessor :user_id
 
   belongs_to :team
-  has_many :accesses
+  has_many :accesses, dependent: :destroy
+  has_many :todos, dependent: :destroy
 
   validates_presence_of :user_id
   after_create :create_admin_access

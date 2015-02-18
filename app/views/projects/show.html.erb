@@ -10,9 +10,9 @@
   <%= @project.team_id %>
 </p>
 
-<%= link_to 'Edit', edit_project_path(@project) %> |
 <%= link_to 'Back', team_path(@team) %>
 
+<% if @project.admin?(current_user) %>
 <h1>Listing accesses</h1>
 
 <table>
@@ -44,3 +44,4 @@
 <br>
 
 <%= link_to 'New Access', new_project_access_path(@project) %>
+<% end %>

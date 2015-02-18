@@ -14,10 +14,10 @@
       <tr>
         <td><%= membership.user_id %></td>
         <td><%= membership.role %></td>
-        <td><%= link_to 'Show', team_membership_path(@team, membership) %></td>
+        <td><%= link_to 'Show', membership_path(membership) %></td>
         <% if team_admin? %>
-        <td><%= link_to 'Edit', edit_team_membership_path(@team, membership) %></td>
-        <td><%= link_to 'Destroy', team_membership_path(@team, membership), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Edit', edit_membership_path(membership) %></td>
+        <td><%= link_to 'Destroy', membership_path(membership), method: :delete, data: { confirm: 'Are you sure?' } %></td>
         <% end %>
       </tr>
     <% end %>

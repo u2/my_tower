@@ -24,7 +24,7 @@ class Team < ActiveRecord::Base
   end
 
   def member?(user)
-    self.memberships.where(user_id: user_id).exists?
+    self.memberships.where(user_id: user.id).exists?
   end
 
   private

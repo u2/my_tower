@@ -12,7 +12,7 @@
     <% @teams.each do |team| %>
       <tr>
         <td><%= team.name %></td>
-        <% if team.admin?(current_user) %>
+        <% if team.member?(current_user) %>
           <td><%= link_to 'Show', team %></td>
         <% end %>
         <% if team.admin?(current_user) %>

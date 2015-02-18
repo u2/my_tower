@@ -1,7 +1,8 @@
 class MembershipsController < TeamController
 
-  before_action :set_team
   before_action :set_membership, only: [:show, :edit, :update, :destroy]
+  before_action :set_team, only: [:new, :index, :create]
+  before_action :team_authenticate!
 
   # GET /memberships
   # GET /memberships.json
@@ -30,7 +31,7 @@ class MembershipsController < TeamController
     @team = @membership.team
     respond_to do |format|
       if @membership.save
-        format.html { redirect_to team_membership_path(@team, @membership), notice: 'Membership was successfully created.' }
+        format.html { redirect_to team_memberships_path(@team), notice: 'Membership was successfully created.' }
       else
         format.html { render :new }
       end
@@ -42,7 +43,7 @@ class MembershipsController < TeamController
   def update
     respond_to do |format|
       if @membership.update(membership_params)
-        format.html { redirect_to team_membership_path(@team, @membership), notice: 'Membership was successfully updated.' }
+        format.html { redirect_to team_memberships_path(@team), notice: 'Membership was successfully updated.' }
       else
         format.html { render :edit }
       end
@@ -62,6 +63,7 @@ class MembershipsController < TeamController
     # Use callbacks to share common setup or constraints between actions.
     def set_membership
       @membership = Membership.find(params[:id])
+      @team = @membership.team
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

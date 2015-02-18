@@ -13,10 +13,7 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :user_id %><br>
-    <%= f.select :user_id, User.pluck(:email, :id) %>
-  </div>
+  <%= @access.user.email %>
   <div class="field">
     <%= f.label :role %><br>
     <%= f.select :role, Access.roles.keys %>
