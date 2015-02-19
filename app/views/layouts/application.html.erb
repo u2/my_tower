@@ -8,6 +8,20 @@
 </head>
 <body>
 
+
+<% if current_user %>
+<%= link_to "Login out", destroy_user_session_path, method: :delete %> |
+<%= link_to "团队选择", teams_path %> |
+<% if @team %>
+	<%= link_to "项目", team_projects_path(@team) %> |
+	<%= link_to "动态" %>  |
+	<%= link_to "团队", team_memberships_path(@team) %> |
+<% end %>
+<% else %>
+<%= link_to "Sign in", new_user_session_path %> | 
+<%= link_to "Sign up", new_user_registration_path %>
+<% end %>
+
 <%= yield %>
 
 </body>

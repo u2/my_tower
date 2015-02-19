@@ -6,7 +6,7 @@ class TodosController < TeamController
   # GET /todos
   # GET /todos.json
   def index
-    @todos = Todo.all
+    @todos = @project.todos
   end
 
   # GET /todos/1
@@ -16,7 +16,7 @@ class TodosController < TeamController
 
   # GET /todos/new
   def new
-    @todo = Todo.new
+    @todo = Todo.new(project_id: params[:project_id])
   end
 
   # GET /todos/1/edit
@@ -78,6 +78,7 @@ class TodosController < TeamController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def todo_params
-      params.require(:todo).permit(:title, :assign_id, :content, :deadline)
+      params[:todo][:project_id] = @project.id if params[:todo]
+      params.require(:todo).permit(:title, :assign_id, :content, :deadline, :project_id)
     end
 end

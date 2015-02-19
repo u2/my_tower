@@ -7,7 +7,7 @@ class AccessesController < TeamController
   # GET /accesses
   # GET /accesses.json
   def index
-    @accesses = Access.all
+    @accesses = @team.accesses
   end
 
   # GET /accesses/1

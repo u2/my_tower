@@ -6,13 +6,14 @@ class ProjectsController < TeamController
   # GET /projects
   # GET /projects.json
   def index
-    @projects = Project.all
+    @projects = @team.projects
   end
 
   # GET /projects/1
   # GET /projects/1.json
   def show
     @accesses = @project.accesses
+    @todos = @project.todos
   end
 
   # GET /projects/new

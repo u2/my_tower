@@ -17,7 +17,7 @@
   </div>
   <div class="field">
     <%= f.label :assign_id %><br>
-    <%= f.number_field :assign_id %>
+    <%= f.select :assign_id, @project.users.map{|user| [user.email, user.id] } %>
   </div>
   <div class="field">
     <%= f.label :content %><br>
@@ -25,7 +25,7 @@
   </div>
   <div class="field">
     <%= f.label :deadline %><br>
-    <%= f.date_select :deadline %>
+    <%= f.date_select :deadline, include_blank: true %>
   </div>
   <div class="actions">
     <%= f.submit %>

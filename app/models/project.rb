@@ -15,23 +15,37 @@ class Project < ActiveRecord::Base
 
   belongs_to :team
   has_many :accesses, dependent: :destroy
+  has_many :users, through: :accesses
   has_many :todos, dependent: :destroy
 
   validates_presence_of :user_id
   after_create :create_admin_access
+
+  validate :must_be_member, :can_not_be_visitor, on: :create
 
   def admin?(user)
     self.accesses.where(user_id: user.id, role: Access.roles[:admin]).exists?
   end
 
   def member?(user)
-    self.accesses.where(user_id: user_id).exists?
+    self.accesses.where(user_id: user.id).exists?
   end
 
-  private
+  def user
+    @user ||= User.find(user_id)
+  end
 
-    def create_admin_access
-      self.accesses.create!(user_id: self.user_id, role: Access.roles[:admin])
-    end
+private
 
+  def must_be_member
+    errors.add(:base, '非团队成员不能创建项目') unless team.member?(user)
+  end
+
+  def can_not_be_visitor
+    errors.add(:base, '访问者不能创建项目') if team.visitor?(user)
+  end
+
+  def create_admin_access
+    self.accesses.create!(user_id: self.user_id, role: Access.roles[:admin])
+  end
 end

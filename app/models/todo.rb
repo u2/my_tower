@@ -26,6 +26,12 @@ class Todo < ActiveRecord::Base
 
   before_create :set_foreign_key
 
+  def can_edit?(cuser)
+    return true if user_id == cuser.id
+    return true if assign_id == cuser.id
+    return false
+  end
+
   include AASM
 
   aasm column: :status, whiny_transitions: true do
@@ -48,13 +54,11 @@ class Todo < ActiveRecord::Base
     event :reopen do
       transitions from: :closed, to: :open
     end
-
   end
 
-  private
+private
 
-    def set_foreign_key
-      self.team_id = self.project.team_id
-    end
-
+  def set_foreign_key
+    self.team_id = self.project.team_id
+  end
 end

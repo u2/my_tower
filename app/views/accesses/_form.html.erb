@@ -16,10 +16,6 @@
     <%= f.select :user_id, User.pluck(:email, :id) %>
   </div>
   <%= f.hidden_field :project_id %>
-  <div class="field">
-    <%= f.label :role %><br>
-    <%= f.select :role, Access.roles.keys %>
-  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

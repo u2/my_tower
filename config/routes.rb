@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :memberships, shallow: true
     resources :projects, shallow: true do
       resources :accesses
+      resources :todos
     end
   end
 

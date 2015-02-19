@@ -26,4 +26,26 @@ RSpec.describe Project, :type => :model do
     expect(access.project).to eq(project)
     expect(access.user_id).to eq(@user.id)
   end
+
+  describe "only admin/participant member project" do
+    it "only member can create project" do
+      member = create(:user)
+      project = @team.projects.new(name: 'project', user_id: member.id)
+      expect(project.save).to be false
+    end
+
+    it "visitor member can not create project" do
+      visitor = create(:user)
+      @team.memberships.create!(user_id: visitor.id, role: Membership.roles[:visitor])
+      project = @team.projects.new(name: 'project', user_id: visitor.id)
+      expect(project.save).to be false
+    end
+
+    it "admin member can create project" do
+      admin = create(:user)
+      @team.memberships.create!(user_id: admin.id, role: Membership.roles[:admin])
+      project = @team.projects.new(name: 'project', user_id: admin.id)
+      expect(project.save).to be true
+    end
+  end
 end

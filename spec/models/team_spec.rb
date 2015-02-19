@@ -12,13 +12,12 @@ require 'rails_helper'
 
 RSpec.describe Team, :type => :model do
 
-  it "created with admin membership" do
+  it "created with super admin membership" do
     user = create(:user)
     team = Team.create(user_id: user.id, name: 'tower')
     membership = Membership.last
-    expect(membership.admin?).to be true
+    expect(membership.super_admin?).to be true
     expect(membership.team_id).to eq(team.id)
     expect(membership.user_id).to eq(user.id)
   end
-
 end

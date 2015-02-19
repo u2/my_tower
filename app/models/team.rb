@@ -17,20 +17,21 @@ class Team < ActiveRecord::Base
   has_many :projects, dependent: :destroy
 
   validates_presence_of :user_id
-  after_create :create_admin_member
+  after_create :create_super_admin_member
 
-  def admin?(user)
-    self.memberships.where(user_id: user.id, role: Membership.roles[:admin]).exists?
+  Membership.roles.keys.each do |role|
+    define_method "#{role}?" do |user|
+      (membership = self.memberships.where(user_id: user.id).first) && membership.send("#{role}?")
+    end
   end
 
   def member?(user)
     self.memberships.where(user_id: user.id).exists?
   end
 
-  private
+private
 
-  def create_admin_member
-    self.memberships.create!(user_id: self.user_id, role: Membership.roles[:admin])
+  def create_super_admin_member
+    self.memberships.create!(user_id: self.user_id, role: Membership.roles[:super_admin])
   end
-
 end

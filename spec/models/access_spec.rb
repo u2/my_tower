@@ -37,4 +37,67 @@ RSpec.describe Access, :type => :model do
     end
   end
 
+  describe "access accroding to membership" do
+    before do
+      @super_admin_user = create(:user)
+      @team = Team.create!(name: 'tower', user_id: @super_admin_user.id)
+
+      @owner = create(:user)
+      @team.memberships.create!(user_id: @owner.id, role: Membership.roles[:participant])
+
+      @project = Project.create!(name: 'project', user_id: @owner.id, team_id: @team.id)
+
+      @visitor = create(:user)
+      @team.memberships.create!(user_id: @visitor.id, role: Membership.roles[:visitor])
+
+      @participant = create(:user)
+      @team.memberships.create!(user_id: @participant.id, role: Membership.roles[:participant])
+
+      @admin = create(:user)
+      @team.memberships.create!(user_id: @admin.id, role: Membership.roles[:admin])
+
+      @project.users << @visitor
+      @project.users << @participant
+      @project.users << @admin
+      @project.users << @super_admin_user
+
+      @project.save!
+
+      @project.reload
+    end
+
+    it "project owner has admin access" do
+      expect(@project.admin?(@owner)).to be true
+    end
+
+    it "admin member has admin access" do
+      expect(@project.admin?(@admin)).to be true
+      expect(@project.admin?(@super_admin_user)).to be true
+    end
+
+    it "participant and visitor member has participant access" do
+      expect(@project.admin?(@participant)).to be false
+      expect(@project.member?(@participant)).to be true
+
+      expect(@project.admin?(@visitor)).to be false
+      expect(@project.member?(@visitor)).to be true
+    end
+
+    it "participant access change to admin access" do
+      participant_membership = @team.memberships.where(user_id: @participant.id).first
+      participant_membership.update!(role: Membership.roles[:admin])
+
+      @project.reload
+      expect(@project.admin?(@participant)).to be true
+    end
+
+    it "admin access change to participant access" do
+      admin_membership = @team.memberships.where(user_id: @admin.id).first
+      admin_membership.update!(role: Membership.roles[:visitor])
+
+      @project.reload
+      expect(@project.admin?(@admin)).to be false
+      expect(@project.member?(@admin)).to be true
+    end
+  end
 end

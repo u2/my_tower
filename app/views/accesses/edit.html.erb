@@ -14,10 +14,6 @@
   <% end %>
 
   <%= @access.user.email %>
-  <div class="field">
-    <%= f.label :role %><br>
-    <%= f.select :role, Access.roles.keys %>
-  </div>
   <div class="actions">
     <%= f.submit %>
   </div>
