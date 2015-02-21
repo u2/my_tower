@@ -14,9 +14,8 @@
 
 FactoryGirl.define do
   factory :membership do
-    user_id 1
-    team_id 1
-    role 1
-    token "MyString"
+    association(:user)
+    association(:team)
+    role { Membership.roles.keys.sample }
   end
 end

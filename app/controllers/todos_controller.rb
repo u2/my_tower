@@ -12,6 +12,7 @@ class TodosController < TeamController
   # GET /todos/1
   # GET /todos/1.json
   def show
+    @comments = @todo.comments
   end
 
   # GET /todos/new
@@ -79,6 +80,6 @@ class TodosController < TeamController
     # Never trust parameters from the scary internet, only allow the white list through.
     def todo_params
       params[:todo][:project_id] = @project.id if params[:todo]
-      params.require(:todo).permit(:title, :assign_id, :content, :deadline, :project_id)
+      params.require(:todo).permit(:title, :assign_id, :content, :deadline, :project_id).merge(user_id: current_user.id)
     end
 end

@@ -19,7 +19,7 @@
   </div>
   <div class="field">
     <%= f.label :assign_id %><br>
-    <%= f.number_field :assign_id %>
+    <%= f.select :assign_id, @project.users.map{|user| [user.email, user.id] } %>
   </div>
   <div class="field">
     <%= f.label :content %><br>
@@ -36,4 +36,4 @@
 
 
 <%= link_to 'Show', @todo %> |
-<%= link_to 'Back', project_todos_path %>
+<%= link_to 'Back', project_todos_path(@project) %>

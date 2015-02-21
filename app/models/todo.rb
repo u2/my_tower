@@ -20,7 +20,8 @@ class Todo < ActiveRecord::Base
   belongs_to :team
   belongs_to :project
   belongs_to :user
-  belongs_to :assign_user, class_name: 'User'
+  belongs_to :assign_user, class_name: 'User', foreign_key: :assign_id
+  has_many :comments, as: :commentable, dependent: :destroy
 
   validates_presence_of :title, :content, :project_id
 

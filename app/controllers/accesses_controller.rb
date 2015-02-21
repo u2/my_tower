@@ -2,7 +2,7 @@ class AccessesController < TeamController
   
   before_action :set_access, only: [:show, :edit, :update, :destroy]
   before_action :set_project, only: [:new, :index, :create]
-  before_action :set_team, :team_authenticate!
+  before_action :team_authenticate!
 
   # GET /accesses
   # GET /accesses.json

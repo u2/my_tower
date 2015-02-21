@@ -22,3 +22,31 @@
 
 <%= link_to 'Edit', edit_todo_path(@todo) %> |
 <%= link_to 'Back', project_todos_path(@project) %>
+
+<h1>Listing comments</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Content</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @comments.each do |comment| %>
+      <tr>
+        <td><%= comment.content %></td>
+        <% if comment.can_edit?(current_user) %>
+        	<td><%= link_to 'Edit', edit_comment_path(comment) %></td>
+        	<td><%= link_to 'Destroy', comment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Comment', new_todo_comment_path(@todo) %>
+
