@@ -18,10 +18,6 @@
 FactoryGirl.define do
   factory :todo do
     sequence(:title) { |n| "Todo#{n}" }
-    content(:title) { |n| "Content#{n}" }
-    association(:user)
-    association(:team)
-    association(:project)
-    association(:assign_user)
+    sequence(:content) { |n| "Content#{n}" }
   end
 end

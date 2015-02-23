@@ -17,6 +17,7 @@ class Project < ActiveRecord::Base
   has_many :accesses, dependent: :destroy
   has_many :users, through: :accesses
   has_many :todos, dependent: :destroy
+  has_many :events, dependent: :destroy
 
   validates_presence_of :user_id
   after_create :create_admin_access

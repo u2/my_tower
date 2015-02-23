@@ -1,5 +1,5 @@
 class TodosController < TeamController
-  before_action :set_todo, only: [:show, :edit, :update, :destroy]
+  before_action :set_todo, only: [:show, :edit, :update, :destroy, :edit_deadline, :edit_assign] + Todo.aasm.events.map(&:name)
   before_action :set_project, only: [:new, :index, :create]
   before_action :team_authenticate!
 
@@ -22,6 +22,19 @@ class TodosController < TeamController
 
   # GET /todos/1/edit
   def edit
+  end
+
+  def edit_deadline
+  end
+
+  def edit_assign
+  end
+
+  Todo.aasm.events.each do |key|
+    define_method(key.name) do
+      @result = @todo.send("#{key.name}!") if !!@todo.__send__("may_#{key.name}?")
+      redirect_to @todo, notice: "event[#{key.name}] -- #{@result}"
+    end
   end
 
   # POST /todos
@@ -59,7 +72,7 @@ class TodosController < TeamController
   def destroy
     @todo.destroy
     respond_to do |format|
-      format.html { redirect_to todos_url, notice: 'Todo was successfully destroyed.' }
+      format.html { redirect_to project_path(@project), notice: 'Todo was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

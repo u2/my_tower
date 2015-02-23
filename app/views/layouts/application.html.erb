@@ -12,9 +12,9 @@
 <% if current_user %>
 <%= link_to "Login out", destroy_user_session_path, method: :delete %> |
 <%= link_to "团队选择", teams_path %> |
-<% if @team %>
+<% if @team && @team.id %>
 	<%= link_to "项目", team_projects_path(@team) %> |
-	<%= link_to "动态" %>  |
+	<%= link_to "动态", team_events_path(@team) %>  |
 	<%= link_to "团队", team_memberships_path(@team) %> |
 <% end %>
 <% else %>

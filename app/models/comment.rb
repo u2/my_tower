@@ -13,12 +13,18 @@
 
 class Comment < ActiveRecord::Base
 
+  ## Paper trail
+  has_paper_trail on: [:create], class_name: 'Event'
+  has_many :events, as: :item, dependent: :destroy
+  after_create :set_object
+
   belongs_to :commentable, polymorphic: true
+  delegate :team_id, :project_id, to: :commentable
   belongs_to :user
+
   validates_presence_of :content
 
   def can_edit?(cuser)
     user_id == cuser.id
   end
-
 end

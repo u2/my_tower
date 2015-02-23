@@ -20,8 +20,21 @@
   <%= @todo.deadline %>
 </p>
 
+<p>
+  <strong>Status:</strong>
+  <%= @todo.status %>
+</p>
+
 <%= link_to 'Edit', edit_todo_path(@todo) %> |
-<%= link_to 'Back', project_todos_path(@project) %>
+<%= link_to 'Back', project_todos_path(@project) %> | 
+<%= link_to 'Edit deadline', edit_deadline_todo_path(@todo) %> |
+<%= link_to 'Edit Assign', edit_assign_todo_path(@todo) %> |
+
+<% Todo.aasm.events.each do |key| %>
+	| <%= link_to key.name, "/todos/#{@todo.id}/#{key.name}", method: :patch %>
+<% end %>
+
+
 
 <h1>Listing comments</h1>
 

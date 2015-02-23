@@ -35,6 +35,7 @@ group :test do
   gem 'factory_girl'
   gem 'factory_girl_rails'
   gem 'rspec-rails', '~> 3.0.1'
+  gem 'database_cleaner'
 end
 
 group :development, :test do
@@ -46,6 +47,10 @@ end
 gem 'devise'
 
 gem 'aasm'
+
+gem 'paper_trail', '3.0.6'
+
+gem 'will_paginate', '~> 3.0'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

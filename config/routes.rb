@@ -12,9 +12,16 @@ Rails.application.routes.draw do
     resources :projects, shallow: true do
       resources :accesses
       resources :todos, shallow: true do
+        member do
+          Todo.aasm.events.each do |key|
+            patch key.name
+          end
+          get :edit_assign, :edit_deadline
+        end
         resources :comments
       end
     end
+    resources :events, only: [:index]
   end
 
   # Example of regular route:

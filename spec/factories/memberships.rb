@@ -14,8 +14,6 @@
 
 FactoryGirl.define do
   factory :membership do
-    association(:user)
-    association(:team)
     role { Membership.roles.keys.sample }
   end
 end

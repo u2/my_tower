@@ -17,7 +17,7 @@
   </div>
   <div class="field">
     <%= f.label :assign_id %><br>
-    <%= f.select :assign_id, @project.users.map{|user| [user.email, user.id] } %>
+    <%= f.select :assign_id, @project.users.map{|user| [user.email, user.id] }, include_blank: true %>
   </div>
   <div class="field">
     <%= f.label :content %><br>
