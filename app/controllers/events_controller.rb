@@ -8,7 +8,12 @@ class EventsController < ApplicationController
   def index
     @projects = current_user.projects.where(team_id: @team.id)
     @events = Event.includes(:project).where(project_id: @projects.map(&:id))
-    @events = @events.order("id DESC").paginate(:page => params[:page], :per_page => 50) 
+    @events = @events.where("id < ?", params[:till_id]) if params[:till_id]
+    @events = @events.order("id DESC").paginate(page: 1, :per_page => 50) 
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
     
 end

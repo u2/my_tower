@@ -1,21 +1,6 @@
 <br >
-<% current_project = nil %>
-<% current_date = nil %>
-<% @events.each do |event| %>
-	<% last_date = event.created_at.to_date %>
-	<% if current_date != last_date %>
-		<% current_date = last_date %>
-		<% current_project = event.project %>
-		<%= current_date %> -------------- <%= current_project.name %><br>
-	<% else %>
-	  <% current_project = event.project %>
-	  <% if current_project != current_project %>
-	  	<% current_project = current_project %>
-	  	-------------- <%= current_project.name %><br>
-	  <% end %>
-	<% end %>
-  
-  <%= event.created_at.strftime("%H:%M") %>
-	<%= event.whodunnit["name"] if event.whodunnit %>
-	<%= event_line event %><br>
-<% end %>
+<div class="events">
+<%= render :partial => 'events', :locals => { :events => @events } %>
+</div>
+
+<%= link_to 'Load More events', team_events_path(team_id: @team.id, :till_id => @events.last.id), :class => 'load-more-events', :remote => true if @events.next_page %>
