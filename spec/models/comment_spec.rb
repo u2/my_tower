@@ -13,7 +13,6 @@
 
 require 'rails_helper'
 
-# TODO: 只能`bundle exec rspec spec/models/comment_spec.rb`，当`bundle exec rspec .`会报错
 RSpec.describe Comment, :type => :model do
   before(:all) do
     @user = create(:user)
@@ -25,7 +24,6 @@ RSpec.describe Comment, :type => :model do
 
     @comment_user = create(:user)
     @comment = Comment.create(user_id: @comment_user.id, commentable_type: @todo.class.name, commentable_id: @todo.id, content: 'content')
-    @event = @comment.reload.events.order(id: :desc).first
   end
 
   describe "edit comment" do
@@ -39,17 +37,23 @@ RSpec.describe Comment, :type => :model do
   end
 
   describe "comment event" do
-    it "commentable" do
+
+    before(:each) do
+      @comment = Comment.create(user_id: @comment_user.id, commentable_type: @todo.class.name, commentable_id: @todo.id, content: 'content')
+      @event = @comment.reload.events.order(id: :desc).first
+    end
+
+    it "commentable", :versioning => true do
       expect(@event.commentable).to eq(@todo)
       expect(@event.commentable_id).to eq(@comment.commentable_id)
     end
 
-    it "event item" do
+    it "event item", :versioning => true do
       expect(@event.event_item_type).to eq(@comment.commentable_type)
       expect(@event.event_item_id).to eq(@comment.commentable_id)
     end
 
-    it "has object attribute" do
+    it "has object attribute", :versioning => true do
       expect(@event.object["id"]).to eq(@comment.id)
     end
   end

@@ -17,7 +17,6 @@
 
 require 'rails_helper'
 
-# TODO: 只能`bundle exec rspec spec/models/todo_spec.rb`，当`bundle exec rspec .`会报错
 RSpec.describe Todo, :type => :model do
 
   before(:all) do
@@ -27,24 +26,6 @@ RSpec.describe Todo, :type => :model do
     @owner = create(:user)
     @assign_user = create(:user)
     @todo = create(:todo, project_id: @project.id, user_id: @owner.id, assign_id: @assign_user.id) 
-
-    @create_event = @todo.reload.events.order(id: :desc).first
-
-    # paper_trail只能在before中使用，paper_trail的bug
-    Todo.aasm.events.each do |key|
-      eval %Q{
-        @todo.#{key.name}!
-        @#{key.name}_event = @todo.reload.events.order(id: :desc).first
-      }
-    end
-
-    @todo.update(assign_id: @user.id)
-    @assign_event = @todo.reload.events.order(id: :desc).first
-
-    @day = Date.today
-
-    @todo.update(deadline: @day)
-    @deadline_event = @todo.reload.events.order(id: :desc).first
   end
 
   describe "only owner or assign_user member can edit todo" do
@@ -53,8 +34,8 @@ RSpec.describe Todo, :type => :model do
     end
 
     it "assign_user can edit" do
-      expect(@todo.can_edit?(@user)).to be true
-      expect(@todo.can_edit?(@assign_user)).to be false
+      expect(@todo.can_edit?(@user)).to be false
+      expect(@todo.can_edit?(@assign_user)).to be true
     end
 
     it "uncorrelated user can not edit" do
@@ -64,47 +45,74 @@ RSpec.describe Todo, :type => :model do
   end
 
   describe "generate event for aasm event" do
+
+    before(:each) do
+      @todo = create(:todo, project_id: @project.id, user_id: @owner.id, assign_id: @assign_user.id) 
+      @create_event = @todo.reload.events.order(id: :desc).first
+    end
+
     context "create event" do
-      it "generate create event" do
+      it "generate create event", :versioning => true do
         expect(@create_event.event).to eq('create')
       end
 
-      it "has object attribute" do
+      it "has object attribute", :versioning => true do
         expect(@create_event.object["id"]).to eq(@todo.id)
       end
     end
 
-    it "generate aasm event" do
+    it "generate aasm event", :versioning => true do
+
+      Todo.aasm.events.each do |key|
+        eval %Q{
+          @todo.#{key.name}!
+          @#{key.name}_event = @todo.reload.events.order(id: :desc).first
+        }
+      end
+
       Todo.aasm.events.each do |key|
         expect(instance_variable_get("@#{key.name}_event").event).to eq("#{key.name}!")
       end
+
+      expect(@start_event.event_item_type).to eq("Todo")
+      expect(@start_event.event_item_id).to eq(@todo.id)
     end
   end
 
   describe "generate update events" do
-    it "assign_id update" do
-      expect(@assign_event.assign_user_was.id).to eq(@assign_user.id)
-      expect(@assign_event.assign_user.id).to eq(@user.id)
-      expect(@assign_event.event).to eq('assign_id_update')
+
+
+
+    context "assign update" do
+
+      before(:each) do
+        @new_user = create(:user)
+        @todo.update(assign_id: @new_user.id)
+        @assign_event = @todo.reload.events.order(id: :desc).first
+      end
+
+      it "assign_id update", :versioning => true do
+        expect(@assign_event.assign_user_was.id).to eq(@assign_user.id)
+        expect(@assign_event.assign_user.id).to eq(@new_user.id)
+        expect(@assign_event.event).to eq('assign_id_update')
+      end
+
+      it "assign event is not commentable", :versioning => true do
+        expect(@assign_event.commentable).to be nil
+        expect(@assign_event.commentable?).to be false
+      end
     end
 
-    it "deadline update" do
-      expect(@deadline_event.deadline_was).to be nil
-      expect(@deadline_event.deadline).to eq(@day.to_s)
-      expect(@deadline_event.event).to eq('deadline_update')
-    end
-  end
+    context "deadline update" do
+      let(:day) { Date.today + (-10..10).to_a.sample }
 
-  describe "event attributes" do
-
-    it "event commentable" do
-      expect(@deadline_event.commentable).to be nil
-      expect(@assign_event.commentable?).to be false
-    end
-
-    it "event type" do
-      expect(@create_event.event_item_type).to eq("Todo")
-      expect(@start_event.event_item_id).to eq(@todo.id)
+      it "deadline update", :versioning => true do
+        @todo.update(deadline: day)
+        @deadline_event = @todo.reload.events.order(id: :desc).first
+        expect(@deadline_event.deadline_was).to be nil
+        expect(@deadline_event.deadline).to eq(day.to_s)
+        expect(@deadline_event.event).to eq('deadline_update')
+      end  
     end
   end
 end
